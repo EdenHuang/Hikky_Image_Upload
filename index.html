@@ -4,30 +4,33 @@
   <meta charset="UTF-8">
   <title>圖片上傳工具</title>
   <style>
-    body { font-family: sans-serif; padding: 2rem; }
-    input, button { margin: 1rem 0; display: block; }
-    img { max-width: 300px; display: block; margin-top: 1rem; }
+    body { font-family: sans-serif; padding: 2rem; max-width: 600px; }
+    input, button, textarea { margin: 1rem 0; display: block; width: 100%; }
+    img { max-width: 100%; display: block; margin-top: 1rem; }
     label { font-weight: bold; margin-top: 1rem; display: block; }
+    #result { margin-top: 1rem; }
   </style>
 </head>
 <body>
   <h2>🖼️ 上傳圖片到 GitHub</h2>
 
-  <!-- 僅供你自己測試，請勿公開 -->
-  <input type="hidden" id="tokenInput" value="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">
+  <label for="tokenInput">GitHub Token：</label>
+  <input type="password" id="tokenInput" placeholder="請輸入你的 GitHub Token，例如 ghp_...">
 
-  <label for="fileInput">選擇圖片檔案：</label>
+  <label for="fileInput">選擇圖片：</label>
   <input type="file" id="fileInput">
 
   <button onclick="uploadImage()">🚀 上傳圖片</button>
+
   <div id="result"></div>
 
   <script>
     async function uploadImage() {
-      const fileInput = document.getElementById('fileInput');
       const token = document.getElementById('tokenInput').value.trim();
+      const fileInput = document.getElementById('fileInput');
       const file = fileInput.files[0];
 
+      if (!token) return alert("❗請輸入 GitHub Token");
       if (!file) return alert("❗請選擇圖片");
 
       document.getElementById('result').innerHTML = "⏳ 上傳中...";
@@ -69,12 +72,13 @@
           } else {
             console.error(data);
             alert("❌ 上傳失敗：" + (data.message || "未知錯誤"));
+            document.getElementById('result').innerText = "❌ 上傳失敗";
           }
 
         } catch (err) {
           console.error(err);
-          alert("❌ 發生錯誤：" + err.message);
-          document.getElementById('result').innerText = "❌ 上傳失敗";
+          alert(err.message);
+          document.getElementById('result').innerText = "❌ 發生錯誤：" + err.message;
         }
       };
 
