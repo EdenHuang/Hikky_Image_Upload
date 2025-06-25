@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta charset="UTF-8">
   <title>圖片上傳工具</title>
@@ -11,9 +11,9 @@
   </style>
 </head>
 <body>
-  <h2>上傳圖片到 GitHub</h2>
+  <h2>🖼️ 圖片上傳到 GitHub</h2>
 
-  <!-- 🛑 僅限內部測試用，請勿公開部署 -->
+  <!-- 測試用 token：請勿公開部署 -->
   <input type="hidden" id="tokenInput" value="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">
 
   <label for="fileInput">選擇圖片檔案：</label>
@@ -28,12 +28,15 @@
       const token = document.getElementById('tokenInput').value.trim();
       const file = fileInput.files[0];
 
-      if (!file) return alert("請選擇圖片");
+      if (!file) return alert("❗請選擇圖片");
+      if (!token) return alert("❗Token 為空");
+
+      document.getElementById('result').innerHTML = "⏳ 圖片上傳中，請稍候...";
 
       const reader = new FileReader();
       reader.onload = async function () {
         const base64Content = reader.result.split(',')[1];
-        const fileName = encodeURIComponent(file.name);
+        const fileName = encodeURIComponent(file.name || `image_${Date.now()}.png`);
 
         const owner = "EdenHuang";
         const repo = "Hikky_Image_Upload";
@@ -54,6 +57,10 @@
 
           const data = await response.json();
 
+          if (response.status === 401) {
+            throw new Error("Token 錯誤或沒有寫入權限！");
+          }
+
           if (data.content && data.content.download_url) {
             document.getElementById('result').innerHTML = `
               ✅ 上傳成功！<br>
@@ -64,9 +71,11 @@
             console.error(data);
             alert("❌ 上傳失敗：" + (data.message || "未知錯誤"));
           }
+
         } catch (err) {
           console.error(err);
           alert("❌ 發生錯誤：" + err.message);
+          document.getElementById('result').innerText = "❌ 上傳失敗";
         }
       };
 
