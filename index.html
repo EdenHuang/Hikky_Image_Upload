@@ -13,9 +13,8 @@
 <body>
   <h2>上傳圖片到 GitHub</h2>
 
-  <label for="tokenInput">請輸入 GitHub Token：</label>
-  <input type="password" id="tokenInput" placeholder="ghp_xxx..." size="50">
-  <input type="text" id="tokenInput" placeholder="ghp_..." size="60" value="ghp_你的token在這">
+  <!-- 🛑 僅限內部測試用，請勿公開部署 -->
+  <input type="hidden" id="tokenInput" value="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">
 
   <label for="fileInput">選擇圖片檔案：</label>
   <input type="file" id="fileInput">
@@ -30,7 +29,6 @@
       const file = fileInput.files[0];
 
       if (!file) return alert("請選擇圖片");
-      if (!token) return alert("請輸入 GitHub Token");
 
       const reader = new FileReader();
       reader.onload = async function () {
@@ -46,7 +44,7 @@
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `token ${token}`
+              "Authorization": "token " + token
             },
             body: JSON.stringify({
               message: `upload ${fileName}`,
