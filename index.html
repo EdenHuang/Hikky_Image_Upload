@@ -11,10 +11,10 @@
   </style>
 </head>
 <body>
-  <h2>🖼️ 圖片上傳到 GitHub</h2>
+  <h2>🖼️ 上傳圖片到 GitHub</h2>
 
-  <!-- 測試用 token：請勿公開部署 -->
-  <input type="hidden" id="tokenInput" value="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">
+  <!-- 僅供你自己測試，請勿公開 -->
+  <input type="hidden" id="tokenInput" value="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">
 
   <label for="fileInput">選擇圖片檔案：</label>
   <input type="file" id="fileInput">
@@ -29,9 +29,8 @@
       const file = fileInput.files[0];
 
       if (!file) return alert("❗請選擇圖片");
-      if (!token) return alert("❗Token 為空");
 
-      document.getElementById('result').innerHTML = "⏳ 圖片上傳中，請稍候...";
+      document.getElementById('result').innerHTML = "⏳ 上傳中...";
 
       const reader = new FileReader();
       reader.onload = async function () {
@@ -58,14 +57,14 @@
           const data = await response.json();
 
           if (response.status === 401) {
-            throw new Error("Token 錯誤或沒有寫入權限！");
+            throw new Error("❌ Token 錯誤或權限不足！");
           }
 
           if (data.content && data.content.download_url) {
             document.getElementById('result').innerHTML = `
               ✅ 上傳成功！<br>
               🔗 <a href="${data.content.download_url}" target="_blank">${data.content.download_url}</a><br>
-              <img src="${data.content.download_url}" alt="上傳圖片">
+              <img src="${data.content.download_url}" alt="圖片預覽">
             `;
           } else {
             console.error(data);
